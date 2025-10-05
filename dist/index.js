@@ -25,10 +25,13 @@ function fixNodeImports(content) {
 
     patterns.forEach((pattern) => {
       fixed = fixed.replace(pattern, (match) => {
-        return match.replace(new RegExp(`["']${escapedModule}`, "g"), (quoteMatch) => {
-          const quote = quoteMatch[0];
-          return `${quote}node:${module}`;
-        });
+        return match.replace(
+          new RegExp(`["']${escapedModule}`, "g"),
+          (quoteMatch) => {
+            const quote = quoteMatch[0];
+            return `${quote}node:${module}`;
+          },
+        );
       });
     });
   });
