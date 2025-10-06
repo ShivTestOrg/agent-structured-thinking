@@ -2,9 +2,23 @@
   "name": "ts-template",
   "description": "ts-template for UbiquityOS plugins.",
   "commands": {
-    "hello": {
-      "ubiquity:example": "/hello argument",
-      "description": "Hello command with an argument."
+    "analyze": {
+      "ubiquity:example": "/analyze <callbackUrl> <jobId> <text>",
+      "description": "An example command that analyzes text using OpenAI and TAVILY APIs.",
+      "parameters": {
+        "callbackUrl": {
+          "type": "string",
+          "description": "The URL to send the analysis result to."
+        },
+        "jobId": {
+          "type": "string",
+          "description": "A unique identifier for the analysis job."
+        },
+        "text": {
+          "type": "string",
+          "description": "The text to be analyzed."
+        }
+      }
     }
   },
   "configuration": {

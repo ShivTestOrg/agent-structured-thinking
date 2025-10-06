@@ -1,6 +1,8 @@
 import OpenAI from "openai";
 import { randomUUID } from "crypto";
 
+// --- Configuration and Utility Types ---
+
 export type LlmStepResponse = {
   output: string;
   reasoning: string;
@@ -68,21 +70,56 @@ export interface LlmConfig {
   temperature?: number;
   maxTokens?: number;
   baseURL?: string;
+  useDummyData?: boolean; // New flag for dummy data
 }
 
 export interface SearchClientConfig {
   apiKey: string;
+  useDummyData?: boolean;
 }
+
+const DUMMY_SEARCH_RESULTS: { [key: string]: string } = {
+  "latest AI trends": "The latest AI trends include multimodal models, edge AI optimization, and a growing focus on ethical AI and regulation.",
+  "structured thinking plan": "A standard structured thinking plan involves Analysis, Decomposition, Exploration, Synthesis, Evaluation, and Conclusion.",
+  "impact of remote work":
+    "Remote work has increased employee flexibility but also introduced challenges in team cohesion and data security. Productivity reports are mixed.",
+};
+
+const DUMMY_PLAN: ThinkingFramework = {
+  steps: [
+    { type: "analysis", description: "Understand the core problem and its constraints." },
+    { type: "decomposition", description: "Break the problem into manageable sub-questions." },
+    { type: "exploration", description: "Search for external, up-to-date data relevant to the problem." },
+    { type: "synthesis", description: "Combine gathered information to form initial hypotheses or solutions." },
+    { type: "evaluation", description: "Critically assess hypotheses against constraints and evidence." },
+    { type: "conclusion", description: "Formulate the final answer, summary, and action plan." },
+  ],
+};
+
+const DUMMY_LLM_STEP_RESPONSE: LlmStepResponse = {
+  output: "This is a dummy output for the current step.",
+  reasoning: "The reasoning is based on simulated data to bypass actual API calls.",
+  confidence: 0.9,
+};
 
 export class SearchClient {
   private readonly _apiKey: string;
+  private readonly _useDummyData: boolean;
 
   constructor(config: SearchClientConfig) {
-    if (!config.apiKey) throw new Error("SearchClient requires an apiKey.");
+    if (!config.apiKey && !config.useDummyData) throw new Error("SearchClient requires an apiKey unless useDummyData is true.");
     this._apiKey = config.apiKey;
+    this._useDummyData = !!config.useDummyData;
   }
 
   public async search(query: string): Promise<string> {
+    if (this._useDummyData) {
+      console.log(`[DUMMY MODE] Simulating search for: "${query}"`);
+      // simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, 6000));
+      return DUMMY_SEARCH_RESULTS[query] || `[DUMMY RESULT] Fictional data for query: "${query}"`;
+    }
+
     try {
       const response = await fetch("https://api.tavily.com/search", {
         method: "POST",
@@ -106,17 +143,29 @@ export class SearchClient {
 }
 
 export class ChatbotClient {
-  private readonly _openai: OpenAI;
+  private readonly _openai: OpenAI | null;
   private readonly _config: LlmConfig;
   private readonly _searchClient: SearchClient;
+  private readonly _useDummyData: boolean;
 
   constructor(llmConfig: LlmConfig, searchClient: SearchClient) {
-    this._openai = new OpenAI({ apiKey: llmConfig.apiKey, baseURL: llmConfig.baseURL, maxRetries: 3 });
+    this._useDummyData = !!llmConfig.useDummyData;
+    if (!this._useDummyData) {
+      this._openai = new OpenAI({ apiKey: llmConfig.apiKey, baseURL: llmConfig.baseURL, maxRetries: 3 });
+      if (!llmConfig.apiKey) throw new Error("ChatbotClient requires an apiKey unless useDummyData is true.");
+    } else {
+      this._openai = null;
+    }
+
     this._config = { temperature: 0.1, maxTokens: 4096, ...llmConfig };
     this._searchClient = searchClient;
   }
 
   public async generateStructuredResponse<T>(systemPrompt: string, userPrompt: string, responseSchema: object, toolName: string): Promise<T> {
+    if (this._useDummyData) {
+      return this._handleDummyStructuredResponse<T>(toolName);
+    }
+
     const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
       { role: "system", content: systemPrompt },
       { role: "user", content: userPrompt },
@@ -143,6 +192,7 @@ export class ChatbotClient {
 
     let attempts = 0;
     while (attempts < 5) {
+      if (!this._openai) throw new Error("OpenAI client not initialized.");
       const response = await this._openai.chat.completions.create({
         model: this._config.model,
         messages: messages,
@@ -155,23 +205,51 @@ export class ChatbotClient {
       const responseMessage = response.choices[0].message;
       messages.push(responseMessage);
 
-      if (responseMessage.tool_calls) {
-        for (const toolCall of responseMessage.tool_calls) {
-          if (toolCall.type === "function" && toolCall.function.name === "search_the_web") {
-            const args = JSON.parse(toolCall.function.arguments);
-            const searchResult = await this._searchClient.search(args.query);
-            messages.push({ tool_call_id: toolCall.id, role: "tool", content: `Search results for "${args.query}":\n${searchResult}` });
-          } else if (toolCall.type === "function" && toolCall.function.name === toolName) {
-            return JSON.parse(toolCall.function.arguments) as T;
-          }
-        }
-      } else if (responseMessage.content) {
-        throw new Error("LLM provided a text response instead of the required structured output tool call.");
+      const toolResult = await this._processToolCalls<T>(responseMessage, messages, toolName);
+      if (toolResult !== undefined) {
+        return toolResult;
       }
       attempts++;
     }
 
     throw new Error("LLM failed to produce the required structured output after multiple attempts.");
+  }
+
+  private async _handleDummyStructuredResponse<T>(toolName: string): Promise<T> {
+    // simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 6000));
+    console.log(`[DUMMY MODE] Simulating LLM call for tool: ${toolName}`);
+    if (toolName === "create_thinking_plan") {
+      return DUMMY_PLAN as T;
+    }
+    if (toolName === "execute_thinking_step") {
+      return DUMMY_LLM_STEP_RESPONSE as T;
+    }
+    if (toolName === "extract_insights") {
+      return { insights: ["Dummy Insight 1", "Dummy Insight 2"] } as T;
+    }
+    return { output: "Dummy response", reasoning: "Simulated", confidence: 0.5 } as T;
+  }
+
+  private async _processToolCalls<T>(
+    responseMessage: OpenAI.Chat.Completions.ChatCompletionMessage,
+    messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[],
+    toolName: string
+  ): Promise<T | undefined> {
+    if (responseMessage.tool_calls) {
+      for (const toolCall of responseMessage.tool_calls) {
+        if (toolCall.type === "function" && toolCall.function.name === "search_the_web") {
+          const args = JSON.parse(toolCall.function.arguments);
+          const searchResult = await this._searchClient.search(args.query);
+          messages.push({ tool_call_id: toolCall.id, role: "tool", content: `Search results for "${args.query}":\n${searchResult}` });
+        } else if (toolCall.type === "function" && toolCall.function.name === toolName) {
+          return JSON.parse(toolCall.function.arguments) as T;
+        }
+      }
+    } else if (responseMessage.content) {
+      throw new Error("LLM provided a text response instead of the required structured output tool call.");
+    }
+    return undefined;
   }
 }
 
