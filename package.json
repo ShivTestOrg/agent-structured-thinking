@@ -38,7 +38,8 @@
     "dotenv": "16.4.7",
     "hono": "^4.6.19",
     "openai": "^5.23.1",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "19.6.1",
