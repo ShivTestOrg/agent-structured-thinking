@@ -33,5 +33,6 @@
         "type": "string"
       }
     }
-  }
+  },
+  "homepage_url": "https://agent-structured-thinking.deno.dev"
 }
