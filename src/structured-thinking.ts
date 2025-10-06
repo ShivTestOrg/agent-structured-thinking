@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from "uuid";
 
 // --- Configuration and Utility Types ---
 
@@ -330,7 +330,7 @@ Your plan must be a logical sequence of these steps. Be strategic about when to 
     }
     const endTime = new Date();
     return {
-      id: randomUUID(),
+      id: uuidv4(),
       problem: input,
       steps,
       conclusion: steps.find((s) => s.type === "conclusion")?.output || "Analysis complete.",
@@ -353,7 +353,7 @@ Your plan must be a logical sequence of these steps. Be strategic about when to 
     const inputContext = this._formatPreviousSteps(previousSteps);
     const result = await this._applyThinkingOperation(config, originalInput, inputContext, context);
     return {
-      id: randomUUID(),
+      id: uuidv4(),
       type: config.type,
       description: config.description,
       input: inputContext,
