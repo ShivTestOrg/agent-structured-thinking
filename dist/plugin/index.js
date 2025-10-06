@@ -19913,413 +19913,6 @@ var t = {
     };
     e.exports = { WebSocket: WebSocket };
   },
-  2048: (e, t, r) => {
-    var s;
-    s = { value: true };
-    Object.defineProperty(t, "v1", {
-      enumerable: true,
-      get: function () {
-        return o.default;
-      },
-    });
-    Object.defineProperty(t, "v3", {
-      enumerable: true,
-      get: function () {
-        return n.default;
-      },
-    });
-    Object.defineProperty(t, "v4", {
-      enumerable: true,
-      get: function () {
-        return i.default;
-      },
-    });
-    Object.defineProperty(t, "v5", {
-      enumerable: true,
-      get: function () {
-        return A.default;
-      },
-    });
-    Object.defineProperty(t, "wD", {
-      enumerable: true,
-      get: function () {
-        return a.default;
-      },
-    });
-    Object.defineProperty(t, "rE", {
-      enumerable: true,
-      get: function () {
-        return c.default;
-      },
-    });
-    Object.defineProperty(t, "tf", {
-      enumerable: true,
-      get: function () {
-        return l.default;
-      },
-    });
-    Object.defineProperty(t, "As", {
-      enumerable: true,
-      get: function () {
-        return u.default;
-      },
-    });
-    Object.defineProperty(t, "qg", {
-      enumerable: true,
-      get: function () {
-        return g.default;
-      },
-    });
-    var o = _interopRequireDefault(r(6415));
-    var n = _interopRequireDefault(r(1697));
-    var i = _interopRequireDefault(r(4676));
-    var A = _interopRequireDefault(r(9771));
-    var a = _interopRequireDefault(r(7723));
-    var c = _interopRequireDefault(r(5868));
-    var l = _interopRequireDefault(r(6200));
-    var u = _interopRequireDefault(r(7597));
-    var g = _interopRequireDefault(r(7267));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-  },
-  216: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var s = _interopRequireDefault(r(6982));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    function md5(e) {
-      if (Array.isArray(e)) {
-        e = Buffer.from(e);
-      } else if (typeof e === "string") {
-        e = Buffer.from(e, "utf8");
-      }
-      return s.default.createHash("md5").update(e).digest();
-    }
-    var o = md5;
-    t["default"] = o;
-  },
-  7723: (e, t) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var r = "00000000-0000-0000-0000-000000000000";
-    t["default"] = r;
-  },
-  7267: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var s = _interopRequireDefault(r(6200));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    function parse(e) {
-      if (!(0, s.default)(e)) {
-        throw TypeError("Invalid UUID");
-      }
-      let t;
-      const r = new Uint8Array(16);
-      r[0] = (t = parseInt(e.slice(0, 8), 16)) >>> 24;
-      r[1] = (t >>> 16) & 255;
-      r[2] = (t >>> 8) & 255;
-      r[3] = t & 255;
-      r[4] = (t = parseInt(e.slice(9, 13), 16)) >>> 8;
-      r[5] = t & 255;
-      r[6] = (t = parseInt(e.slice(14, 18), 16)) >>> 8;
-      r[7] = t & 255;
-      r[8] = (t = parseInt(e.slice(19, 23), 16)) >>> 8;
-      r[9] = t & 255;
-      r[10] = ((t = parseInt(e.slice(24, 36), 16)) / 1099511627776) & 255;
-      r[11] = (t / 4294967296) & 255;
-      r[12] = (t >>> 24) & 255;
-      r[13] = (t >>> 16) & 255;
-      r[14] = (t >>> 8) & 255;
-      r[15] = t & 255;
-      return r;
-    }
-    var o = parse;
-    t["default"] = o;
-  },
-  7879: (e, t) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var r = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
-    t["default"] = r;
-  },
-  2973: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = rng;
-    var s = _interopRequireDefault(r(6982));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    const o = new Uint8Array(256);
-    let n = o.length;
-    function rng() {
-      if (n > o.length - 16) {
-        s.default.randomFillSync(o);
-        n = 0;
-      }
-      return o.slice(n, (n += 16));
-    }
-  },
-  507: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var s = _interopRequireDefault(r(6982));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    function sha1(e) {
-      if (Array.isArray(e)) {
-        e = Buffer.from(e);
-      } else if (typeof e === "string") {
-        e = Buffer.from(e, "utf8");
-      }
-      return s.default.createHash("sha1").update(e).digest();
-    }
-    var o = sha1;
-    t["default"] = o;
-  },
-  7597: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var s = _interopRequireDefault(r(6200));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    const o = [];
-    for (let e = 0; e < 256; ++e) {
-      o.push((e + 256).toString(16).substr(1));
-    }
-    function stringify(e, t = 0) {
-      const r = (
-        o[e[t + 0]] +
-        o[e[t + 1]] +
-        o[e[t + 2]] +
-        o[e[t + 3]] +
-        "-" +
-        o[e[t + 4]] +
-        o[e[t + 5]] +
-        "-" +
-        o[e[t + 6]] +
-        o[e[t + 7]] +
-        "-" +
-        o[e[t + 8]] +
-        o[e[t + 9]] +
-        "-" +
-        o[e[t + 10]] +
-        o[e[t + 11]] +
-        o[e[t + 12]] +
-        o[e[t + 13]] +
-        o[e[t + 14]] +
-        o[e[t + 15]]
-      ).toLowerCase();
-      if (!(0, s.default)(r)) {
-        throw TypeError("Stringified UUID is invalid");
-      }
-      return r;
-    }
-    var n = stringify;
-    t["default"] = n;
-  },
-  6415: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var s = _interopRequireDefault(r(2973));
-    var o = _interopRequireDefault(r(7597));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    let n;
-    let i;
-    let A = 0;
-    let a = 0;
-    function v1(e, t, r) {
-      let c = (t && r) || 0;
-      const l = t || new Array(16);
-      e = e || {};
-      let u = e.node || n;
-      let g = e.clockseq !== undefined ? e.clockseq : i;
-      if (u == null || g == null) {
-        const t = e.random || (e.rng || s.default)();
-        if (u == null) {
-          u = n = [t[0] | 1, t[1], t[2], t[3], t[4], t[5]];
-        }
-        if (g == null) {
-          g = i = ((t[6] << 8) | t[7]) & 16383;
-        }
-      }
-      let d = e.msecs !== undefined ? e.msecs : Date.now();
-      let p = e.nsecs !== undefined ? e.nsecs : a + 1;
-      const h = d - A + (p - a) / 1e4;
-      if (h < 0 && e.clockseq === undefined) {
-        g = (g + 1) & 16383;
-      }
-      if ((h < 0 || d > A) && e.nsecs === undefined) {
-        p = 0;
-      }
-      if (p >= 1e4) {
-        throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");
-      }
-      A = d;
-      a = p;
-      i = g;
-      d += 122192928e5;
-      const E = ((d & 268435455) * 1e4 + p) % 4294967296;
-      l[c++] = (E >>> 24) & 255;
-      l[c++] = (E >>> 16) & 255;
-      l[c++] = (E >>> 8) & 255;
-      l[c++] = E & 255;
-      const m = ((d / 4294967296) * 1e4) & 268435455;
-      l[c++] = (m >>> 8) & 255;
-      l[c++] = m & 255;
-      l[c++] = ((m >>> 24) & 15) | 16;
-      l[c++] = (m >>> 16) & 255;
-      l[c++] = (g >>> 8) | 128;
-      l[c++] = g & 255;
-      for (let e = 0; e < 6; ++e) {
-        l[c + e] = u[e];
-      }
-      return t || (0, o.default)(l);
-    }
-    var c = v1;
-    t["default"] = c;
-  },
-  1697: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var s = _interopRequireDefault(r(2930));
-    var o = _interopRequireDefault(r(216));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    const n = (0, s.default)("v3", 48, o.default);
-    var i = n;
-    t["default"] = i;
-  },
-  2930: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = _default;
-    t.URL = t.DNS = void 0;
-    var s = _interopRequireDefault(r(7597));
-    var o = _interopRequireDefault(r(7267));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    function stringToBytes(e) {
-      e = unescape(encodeURIComponent(e));
-      const t = [];
-      for (let r = 0; r < e.length; ++r) {
-        t.push(e.charCodeAt(r));
-      }
-      return t;
-    }
-    const n = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
-    t.DNS = n;
-    const i = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
-    t.URL = i;
-    function _default(e, t, r) {
-      function generateUUID(e, n, i, A) {
-        if (typeof e === "string") {
-          e = stringToBytes(e);
-        }
-        if (typeof n === "string") {
-          n = (0, o.default)(n);
-        }
-        if (n.length !== 16) {
-          throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");
-        }
-        let a = new Uint8Array(16 + e.length);
-        a.set(n);
-        a.set(e, n.length);
-        a = r(a);
-        a[6] = (a[6] & 15) | t;
-        a[8] = (a[8] & 63) | 128;
-        if (i) {
-          A = A || 0;
-          for (let e = 0; e < 16; ++e) {
-            i[A + e] = a[e];
-          }
-          return i;
-        }
-        return (0, s.default)(a);
-      }
-      try {
-        generateUUID.name = e;
-      } catch (e) {}
-      generateUUID.DNS = n;
-      generateUUID.URL = i;
-      return generateUUID;
-    }
-  },
-  4676: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var s = _interopRequireDefault(r(2973));
-    var o = _interopRequireDefault(r(7597));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    function v4(e, t, r) {
-      e = e || {};
-      const n = e.random || (e.rng || s.default)();
-      n[6] = (n[6] & 15) | 64;
-      n[8] = (n[8] & 63) | 128;
-      if (t) {
-        r = r || 0;
-        for (let e = 0; e < 16; ++e) {
-          t[r + e] = n[e];
-        }
-        return t;
-      }
-      return (0, o.default)(n);
-    }
-    var n = v4;
-    t["default"] = n;
-  },
-  9771: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var s = _interopRequireDefault(r(2930));
-    var o = _interopRequireDefault(r(507));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    const n = (0, s.default)("v5", 80, o.default);
-    var i = n;
-    t["default"] = i;
-  },
-  6200: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var s = _interopRequireDefault(r(7879));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    function validate(e) {
-      return typeof e === "string" && s.default.test(e);
-    }
-    var o = validate;
-    t["default"] = o;
-  },
-  5868: (e, t, r) => {
-    Object.defineProperty(t, "__esModule", { value: true });
-    t["default"] = void 0;
-    var s = _interopRequireDefault(r(6200));
-    function _interopRequireDefault(e) {
-      return e && e.__esModule ? e : { default: e };
-    }
-    function version(e) {
-      if (!(0, s.default)(e)) {
-        throw TypeError("Invalid UUID");
-      }
-      return parseInt(e.substr(14, 1), 16);
-    }
-    var o = version;
-    t["default"] = o;
-  },
   8264: (e) => {
     e.exports = wrappy;
     function wrappy(e, t) {
@@ -22320,7 +21913,7 @@ function __nccwpck_require__(e) {
 if (typeof __nccwpck_require__ !== "undefined")
   __nccwpck_require__.ab = new URL(".", import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
 var s = {};
-__nccwpck_require__.d(s, { A: () => Zs });
+__nccwpck_require__.d(s, { A: () => $s });
 var o = {};
 __nccwpck_require__.r(o);
 __nccwpck_require__.d(o, {
@@ -37235,23 +36828,87 @@ const Ns = new Set([
   "/batches",
   "/images/edits",
 ]);
-var Gs = __nccwpck_require__(2048);
-const Ps = Gs.v1;
-const Ls = Gs.v3;
-const Ms = Gs.v4;
-const xs = Gs.v5;
-const Hs = Gs.wD;
-const Vs = Gs.rE;
-const Ys = Gs.tf;
-const Js = Gs.As;
-const js = Gs.qg;
-const qs = {
+var Gs = __nccwpck_require__(7598);
+const Ps = { randomUUID: Gs.randomUUID };
+const Ls = new Uint8Array(256);
+let Ms = Ls.length;
+function rng() {
+  if (Ms > Ls.length - 16) {
+    (0, Gs.randomFillSync)(Ls);
+    Ms = 0;
+  }
+  return Ls.slice(Ms, (Ms += 16));
+}
+const xs = [];
+for (let e = 0; e < 256; ++e) {
+  xs.push((e + 256).toString(16).slice(1));
+}
+function unsafeStringify(e, t = 0) {
+  return (
+    xs[e[t + 0]] +
+    xs[e[t + 1]] +
+    xs[e[t + 2]] +
+    xs[e[t + 3]] +
+    "-" +
+    xs[e[t + 4]] +
+    xs[e[t + 5]] +
+    "-" +
+    xs[e[t + 6]] +
+    xs[e[t + 7]] +
+    "-" +
+    xs[e[t + 8]] +
+    xs[e[t + 9]] +
+    "-" +
+    xs[e[t + 10]] +
+    xs[e[t + 11]] +
+    xs[e[t + 12]] +
+    xs[e[t + 13]] +
+    xs[e[t + 14]] +
+    xs[e[t + 15]]
+  ).toLowerCase();
+}
+function stringify_stringify(e, t = 0) {
+  const r = unsafeStringify(e, t);
+  if (!validate(r)) {
+    throw TypeError("Stringified UUID is invalid");
+  }
+  return r;
+}
+const Hs = null && stringify_stringify;
+function _v4(e, t, r) {
+  e = e || {};
+  const s = e.random ?? e.rng?.() ?? rng();
+  if (s.length < 16) {
+    throw new Error("Random bytes length must be >= 16");
+  }
+  s[6] = (s[6] & 15) | 64;
+  s[8] = (s[8] & 63) | 128;
+  if (t) {
+    r = r || 0;
+    if (r < 0 || r + 16 > t.length) {
+      throw new RangeError(`UUID byte range ${r}:${r + 15} is out of buffer bounds`);
+    }
+    for (let e = 0; e < 16; ++e) {
+      t[r + e] = s[e];
+    }
+    return t;
+  }
+  return unsafeStringify(s);
+}
+function v4(e, t, r) {
+  if (Ps.randomUUID && !t && !e) {
+    return Ps.randomUUID();
+  }
+  return _v4(e, t, r);
+}
+const Vs = v4;
+const Ys = {
   "latest AI trends": "The latest AI trends include multimodal models, edge AI optimization, and a growing focus on ethical AI and regulation.",
   "structured thinking plan": "A standard structured thinking plan involves Analysis, Decomposition, Exploration, Synthesis, Evaluation, and Conclusion.",
   "impact of remote work":
     "Remote work has increased employee flexibility but also introduced challenges in team cohesion and data security. Productivity reports are mixed.",
 };
-const Ws = {
+const Js = {
   steps: [
     { type: "analysis", description: "Understand the core problem and its constraints." },
     { type: "decomposition", description: "Break the problem into manageable sub-questions." },
@@ -37261,7 +36918,7 @@ const Ws = {
     { type: "conclusion", description: "Formulate the final answer, summary, and action plan." },
   ],
 };
-const Ks = {
+const js = {
   output: "This is a dummy output for the current step.",
   reasoning: "The reasoning is based on simulated data to bypass actual API calls.",
   confidence: 0.9,
@@ -37278,7 +36935,7 @@ class SearchClient {
     if (this._useDummyData) {
       console.log(`[DUMMY MODE] Simulating search for: "${e}"`);
       await new Promise((e) => setTimeout(e, 6e3));
-      return qs[e] || `[DUMMY RESULT] Fictional data for query: "${e}"`;
+      return Ys[e] || `[DUMMY RESULT] Fictional data for query: "${e}"`;
     }
     try {
       const t = await fetch("https://api.tavily.com/search", {
@@ -37358,10 +37015,10 @@ class ChatbotClient {
     await new Promise((e) => setTimeout(e, 6e3));
     console.log(`[DUMMY MODE] Simulating LLM call for tool: ${e}`);
     if (e === "create_thinking_plan") {
-      return Ws;
+      return Js;
     }
     if (e === "execute_thinking_step") {
-      return Ks;
+      return js;
     }
     if (e === "extract_insights") {
       return { insights: ["Dummy Insight 1", "Dummy Insight 2"] };
@@ -37439,7 +37096,7 @@ class StructuredThinkingEngine {
     }
     const i = new Date();
     return {
-      id: Ms(),
+      id: Vs(),
       problem: e,
       steps: n,
       conclusion: n.find((e) => e.type === "conclusion")?.output || "Analysis complete.",
@@ -37451,7 +37108,7 @@ class StructuredThinkingEngine {
     const o = this._formatPreviousSteps(r);
     const n = await this._applyThinkingOperation(e, t, o, s);
     return {
-      id: Ms(),
+      id: Vs(),
       type: e.type,
       description: e.description,
       input: o,
@@ -37578,22 +37235,22 @@ async function updateCallbackUrl(e, t, r, s) {
     console.error(`Failed to send callback to ${e}:`, t);
   }
 }
-var $s = __nccwpck_require__(2874);
-const zs = rt.Object({
+var qs = __nccwpck_require__(2874);
+const Ws = rt.Object({
   LOG_LEVEL: rt.Optional(rt.Enum(i, { default: i.INFO })),
   KERNEL_PUBLIC_KEY: rt.Optional(rt.String()),
   OPENAI_API_KEY: rt.String(),
   TAVILY_API_KEY: rt.String(),
 });
-const Xs = rt.Object({ configurableResponse: rt.String({ default: "Hello, world!" }), customStringsUrl: rt.Optional(rt.String()) }, { default: {} });
-const Zs = createActionsPlugin((e) => runPlugin(e), {
+const Ks = rt.Object({ configurableResponse: rt.String({ default: "Hello, world!" }), customStringsUrl: rt.Optional(rt.String()) }, { default: {} });
+const $s = createActionsPlugin((e) => runPlugin(e), {
   logLevel: process.env.LOG_LEVEL || i.INFO,
-  settingsSchema: Xs,
-  envSchema: zs,
+  settingsSchema: Ks,
+  envSchema: Ws,
   ...(process.env.KERNEL_PUBLIC_KEY && { kernelPublicKey: process.env.KERNEL_PUBLIC_KEY }),
   postCommentOnError: true,
   bypassSignatureVerification: process.env.NODE_ENV === "local",
 });
-var eo = s.A;
-export { eo as default };
+var zs = s.A;
+export { zs as default };
 //# sourceMappingURL=index.js.map
