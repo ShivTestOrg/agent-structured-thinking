@@ -21913,7 +21913,7 @@ function __nccwpck_require__(e) {
 if (typeof __nccwpck_require__ !== "undefined")
   __nccwpck_require__.ab = new URL(".", import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
 var s = {};
-__nccwpck_require__.d(s, { A: () => xs });
+__nccwpck_require__.d(s, { A: () => Ys });
 var o = {};
 __nccwpck_require__.r(o);
 __nccwpck_require__.d(o, {
@@ -36829,13 +36829,41 @@ const Ns = new Set([
   "/images/edits",
 ]);
 var Gs = __nccwpck_require__(6982);
+const Ps = {
+  "latest AI trends": "The latest AI trends include multimodal models, edge AI optimization, and a growing focus on ethical AI and regulation.",
+  "structured thinking plan": "A standard structured thinking plan involves Analysis, Decomposition, Exploration, Synthesis, Evaluation, and Conclusion.",
+  "impact of remote work":
+    "Remote work has increased employee flexibility but also introduced challenges in team cohesion and data security. Productivity reports are mixed.",
+};
+const Ls = {
+  steps: [
+    { type: "analysis", description: "Understand the core problem and its constraints." },
+    { type: "decomposition", description: "Break the problem into manageable sub-questions." },
+    { type: "exploration", description: "Search for external, up-to-date data relevant to the problem." },
+    { type: "synthesis", description: "Combine gathered information to form initial hypotheses or solutions." },
+    { type: "evaluation", description: "Critically assess hypotheses against constraints and evidence." },
+    { type: "conclusion", description: "Formulate the final answer, summary, and action plan." },
+  ],
+};
+const Ms = {
+  output: "This is a dummy output for the current step.",
+  reasoning: "The reasoning is based on simulated data to bypass actual API calls.",
+  confidence: 0.9,
+};
 class SearchClient {
   _apiKey;
+  _useDummyData;
   constructor(e) {
-    if (!e.apiKey) throw new Error("SearchClient requires an apiKey.");
+    if (!e.apiKey && !e.useDummyData) throw new Error("SearchClient requires an apiKey unless useDummyData is true.");
     this._apiKey = e.apiKey;
+    this._useDummyData = !!e.useDummyData;
   }
   async search(e) {
+    if (this._useDummyData) {
+      console.log(`[DUMMY MODE] Simulating search for: "${e}"`);
+      await new Promise((e) => setTimeout(e, 6e3));
+      return Ps[e] || `[DUMMY RESULT] Fictional data for query: "${e}"`;
+    }
     try {
       const t = await fetch("https://api.tavily.com/search", {
         method: "POST",
@@ -36855,12 +36883,22 @@ class ChatbotClient {
   _openai;
   _config;
   _searchClient;
+  _useDummyData;
   constructor(e, t) {
-    this._openai = new OpenAI({ apiKey: e.apiKey, baseURL: e.baseURL, maxRetries: 3 });
+    this._useDummyData = !!e.useDummyData;
+    if (!this._useDummyData) {
+      this._openai = new OpenAI({ apiKey: e.apiKey, baseURL: e.baseURL, maxRetries: 3 });
+      if (!e.apiKey) throw new Error("ChatbotClient requires an apiKey unless useDummyData is true.");
+    } else {
+      this._openai = null;
+    }
     this._config = { temperature: 0.1, maxTokens: 4096, ...e };
     this._searchClient = t;
   }
   async generateStructuredResponse(e, t, r, s) {
+    if (this._useDummyData) {
+      return this._handleDummyStructuredResponse(s);
+    }
     const o = [
       { role: "system", content: e },
       { role: "user", content: t },
@@ -36881,6 +36919,7 @@ class ChatbotClient {
     ];
     let i = 0;
     while (i < 5) {
+      if (!this._openai) throw new Error("OpenAI client not initialized.");
       const e = await this._openai.chat.completions.create({
         model: this._config.model,
         messages: o,
@@ -36891,22 +36930,43 @@ class ChatbotClient {
       });
       const t = e.choices[0].message;
       o.push(t);
-      if (t.tool_calls) {
-        for (const e of t.tool_calls) {
-          if (e.type === "function" && e.function.name === "search_the_web") {
-            const t = JSON.parse(e.function.arguments);
-            const r = await this._searchClient.search(t.query);
-            o.push({ tool_call_id: e.id, role: "tool", content: `Search results for "${t.query}":\n${r}` });
-          } else if (e.type === "function" && e.function.name === s) {
-            return JSON.parse(e.function.arguments);
-          }
-        }
-      } else if (t.content) {
-        throw new Error("LLM provided a text response instead of the required structured output tool call.");
+      const r = await this._processToolCalls(t, o, s);
+      if (r !== undefined) {
+        return r;
       }
       i++;
     }
     throw new Error("LLM failed to produce the required structured output after multiple attempts.");
+  }
+  async _handleDummyStructuredResponse(e) {
+    await new Promise((e) => setTimeout(e, 6e3));
+    console.log(`[DUMMY MODE] Simulating LLM call for tool: ${e}`);
+    if (e === "create_thinking_plan") {
+      return Ls;
+    }
+    if (e === "execute_thinking_step") {
+      return Ms;
+    }
+    if (e === "extract_insights") {
+      return { insights: ["Dummy Insight 1", "Dummy Insight 2"] };
+    }
+    return { output: "Dummy response", reasoning: "Simulated", confidence: 0.5 };
+  }
+  async _processToolCalls(e, t, r) {
+    if (e.tool_calls) {
+      for (const s of e.tool_calls) {
+        if (s.type === "function" && s.function.name === "search_the_web") {
+          const e = JSON.parse(s.function.arguments);
+          const r = await this._searchClient.search(e.query);
+          t.push({ tool_call_id: s.id, role: "tool", content: `Search results for "${e.query}":\n${r}` });
+        } else if (s.type === "function" && s.function.name === r) {
+          return JSON.parse(s.function.arguments);
+        }
+      }
+    } else if (e.content) {
+      throw new Error("LLM provided a text response instead of the required structured output tool call.");
+    }
+    return undefined;
   }
 }
 class StructuredThinkingEngine {
@@ -37102,22 +37162,22 @@ async function updateCallbackUrl(e, t, r, s) {
     console.error(`Failed to send callback to ${e}:`, t);
   }
 }
-var Ps = __nccwpck_require__(2874);
-const Ls = rt.Object({
+var xs = __nccwpck_require__(2874);
+const Hs = rt.Object({
   LOG_LEVEL: rt.Optional(rt.Enum(i, { default: i.INFO })),
   KERNEL_PUBLIC_KEY: rt.Optional(rt.String()),
   OPENAI_API_KEY: rt.String(),
   TAVILY_API_KEY: rt.String(),
 });
-const Ms = rt.Object({ configurableResponse: rt.String({ default: "Hello, world!" }), customStringsUrl: rt.Optional(rt.String()) }, { default: {} });
-const xs = createActionsPlugin((e) => runPlugin(e), {
+const Vs = rt.Object({ configurableResponse: rt.String({ default: "Hello, world!" }), customStringsUrl: rt.Optional(rt.String()) }, { default: {} });
+const Ys = createActionsPlugin((e) => runPlugin(e), {
   logLevel: process.env.LOG_LEVEL || i.INFO,
-  settingsSchema: Ms,
-  envSchema: Ls,
+  settingsSchema: Vs,
+  envSchema: Hs,
   ...(process.env.KERNEL_PUBLIC_KEY && { kernelPublicKey: process.env.KERNEL_PUBLIC_KEY }),
   postCommentOnError: true,
   bypassSignatureVerification: process.env.NODE_ENV === "local",
 });
-var Hs = s.A;
-export { Hs as default };
+var Js = s.A;
+export { Js as default };
 //# sourceMappingURL=index.js.map
